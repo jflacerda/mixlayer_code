@@ -1,0 +1,6 @@
+! mesh and metrics information
+
+real(8),dimension(imax):: x
+real(8),dimension(jmax):: y
+
+common/mshbase/ x, y
