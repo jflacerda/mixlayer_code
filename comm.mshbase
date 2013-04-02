@@ -1,6 +1,7 @@
 ! mesh and metrics information
 
+integer(4):: jmid, jmaxaux
 real(8),dimension(imax):: x
-real(8),dimension(jmax):: y
+real(8),dimension(jmax):: y, eta
 
-common/mshbase/ x, y
+common/mshbase/ jmid, jmaxaux, x, y, eta

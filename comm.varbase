@@ -1,0 +1,7 @@
+! main variables
+
+real(8),dimension(jmax)  :: u, v, rho, T
+real(8),dimension(5,jmax):: solu
+
+common/variables/ u, v, rho, T, solu
+
