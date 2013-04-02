@@ -6,6 +6,7 @@ logical:: restart, ldisturb, lprintform, lfilter
 real(8):: dt, tfinal
 real(8):: dksi, dn, stx, sty, xl, yl, posxin, posyin
 real(8):: mach, Re, Pr, cv, kappa, kcond, mi
+real(8):: Umax1, Tmax1, Hemax1
 real(8):: af, bf, cf, df, alphaf
 real(8):: omega, t_period
 real(8):: damp, pi
@@ -57,7 +58,11 @@ parameter (dn       = 0.149998305009144d0)  !tamanho do delta na direcao n
 
 parameter (mach     = 0.1d0)
 parameter (Re       = 250.d0)
-parameter (Pr       = 100.d0)
+parameter (Pr       = 0.66465d0)
+parameter (Umax1    = 155.83d0)
+parameter (Tmax1    = 100.d0)
+parameter (Hemax1   = -9444.04955d0)
+
 parameter (cv       = 0.1d0)
 parameter (mi       = 0.3d0)
 parameter (kcond    = 1.d0)

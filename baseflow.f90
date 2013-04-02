@@ -34,6 +34,8 @@ include 'comm.varbase'
  !........................ Integration of equations
  call integra
  
+ !........................ Calculation of flow variables
+ call calc_flowvar 
 
  stop
 
@@ -53,7 +55,6 @@ include '../var.f90'
 include 'comm.mshbase'
 
 integer(4):: icount, icountmax
-!integer(4):: j, jmid, jmaxver, jmaxaux, i, istf1, istf2, ind
 integer(4):: j, jmaxver, i, istf1, istf2, ind
 real(8):: a3, ksi0, ksi, stxf, ep, posx, dx, dy
 real(8),allocatable,dimension(:):: yaux1, yaux2
@@ -143,7 +144,6 @@ lwrite = .false.
         lstop=.true.
       endif
     else
-      write(*,*) 'jmax = ', jmax, 'jmaxaux= ', jmaxaux
       allocate (yaux1(jmid))
       allocate (yaux2(jmaxaux))	  
       lstop=.true.
@@ -379,7 +379,7 @@ real(8)                :: hh, h6, dfd_eta(5), f_etat(5), dfd_eta2(5)
  end subroutine rk4
 !*******************************************************************************
 subroutine derivs (f_eta, dfd_eta)
-  
+
 !  This subroutine sets the system of first order differential 
 !  equations for the compressible shear layer 
 !  
@@ -401,30 +401,69 @@ subroutine derivs (f_eta, dfd_eta)
 ! Chi = 2.0
 
 implicit none
+include '../var.f90'
 real(8), intent(in)    :: f_eta(5)
 real(8), intent(out)   :: dfd_eta(5)
-real(8)                :: Pr, U1, h1, Chi
+real(8)                :: Pr1, U1, h1, Chi
 
- Pr = 0.66465d0
- U1 = 155.83d0
- h1 = -9444.04955d0
+ Pr1 = Pr
+ U1  = Umax1
+ h1  = Hemax1
  Chi = 1.d0
  
  dfd_eta(1) =   f_eta(2)
  dfd_eta(2) =   f_eta(3)
  dfd_eta(3) = - ( f_eta(1) * f_eta(3) )/ Chi
  dfd_eta(4) =   f_eta(5)
- dfd_eta(5) = - (Pr * f_eta(1) * f_eta(5))/Chi - (Pr * U1 * U1 * f_eta(3) * f_eta(3) / h1)
+ dfd_eta(5) = - (Pr1 * f_eta(1) * f_eta(5))/Chi - (Pr1 * U1 * U1 * f_eta(3) * f_eta(3) / h1)
 
  
  !dfd_eta(1) =   f_eta(2)
  !dfd_eta(2) =   f_eta(3)
  !dfd_eta(3) = - 0.5d0 * f_eta(1) * f_eta(3)
  !dfd_eta(4) =   f_eta(5)
- !dfd_eta(5) = - 0.5d0 * Pr * f_eta(1) * f_eta(5) - Pr * U1 * U1 * f_eta(3) * f_eta(3) / h1
+ !dfd_eta(5) = - 0.5d0 * Pr1 * f_eta(1) * f_eta(5) - Pr1 * U1 * U1 * f_eta(3) * f_eta(3) / h1
 
 
 end subroutine derivs
+!*******************************************************************************
+subroutine calc_flowvar
+
+ ! calculates non-dimensionles flow variables
+ ! u   - x velocity
+ ! v   - y velocity
+ ! rho - density
+ ! T   - Temperature
+ 
+ implicit none
+ include '../var.f90'
+ include 'comm.mshbase'
+ include 'comm.varbase'
+ 
+ integer(4):: j
+ 
+ ! u: x velocity
+ u = solu(2,:)
+ 
+ ! v: y velocity
+ v = eta*solu(2,:) - solu(1,:)
+ 
+ ! T: temperature
+ T = solu(4,:)
+ 
+ ! rho: density
+ rho = 1.d0/T
+ 
+ open (1, file='results.out',status='unknown')
+   write(1,*) 'j u v rho T y eta'
+   do j = 1, jmax
+     write(1,*) j, u(j), v(j), rho(j), T(j), y(j), eta(j)
+   enddo
+ close(1)
+
+return
+end subroutine calc_flowvar
+
 !*******************************************************************************
 
 ! subroutine escreve(itime)
