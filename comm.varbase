@@ -2,6 +2,7 @@
 
 real(8),dimension(jmax)  :: u, v, rho, T
 real(8),dimension(5,jmax):: solu
+real(8):: fp_f, g_f, fpp_f, gp_f
 
-common/variables/ u, v, rho, T, solu
+common/variables/ u, v, rho, T, solu, fp_f, g_f, fpp_f, gp_f
 

@@ -10,7 +10,8 @@ real(8):: Umax1, Umax2, Uratio, Tmax1, Hemax1, Hemax2, Heratio
 real(8):: af, bf, cf, df, alphaf
 real(8):: omega, t_period
 real(8):: damp, pi
-real(8):: Lguess, Pguess, Rguess, Qguess
+real(8):: fp_guess, g_guess, fpp_guess, gp_guess
+
 
 parameter (restart  = .false.)   ! se reinicia ou não a simulação a partir de uma anterior
 parameter (lprintform = .true.) ! se imprime formatado ou nao
@@ -31,8 +32,8 @@ parameter(inter = interderv + interfilt)
 
 !parameter (imaxin = 61)  
 !parameter (jmaxin = imaxin)
-parameter (imaxin = 2500, jmaxin=850)  ! Malha Quali
-!parameter (imaxin = 2500, jmaxin=200)  ! Malha regular em y - comparacao Salemi
+!parameter (imaxin = 2500, jmaxin=850)  ! Malha Quali
+parameter (imaxin = 200, jmaxin=200)  ! Malha regular em y - comparacao Salemi
 
 ! Definindo numero de pontos para cada nó
 parameter (ptsx = (imaxin+(inter+1)*(nprocx-1))/nprocx)
@@ -59,17 +60,17 @@ parameter (dn       = 0.149998305009144d0)  !tamanho do delta na direcao n
 
 parameter (mach     = 0.1d0)
 parameter (Re       = 250.d0)
-parameter (Pr       = 0.66465d0)
-parameter (Umax1    = 155.83d0)
-parameter (Umax2    = 77.91d0)
+parameter (Pr       = 0.71d0)
+parameter (Umax1    = 171.6d0)
+parameter (Umax2    = 85.8d0)
 parameter (Uratio   = Umax2/Umax1)
-parameter (Tmax1    = 100.d0)
-parameter (Hemax1   = -9444.04955d0)
-parameter (Hemax2   = -9444.04955d0)
+parameter (Tmax1    = 280.d0)
+parameter (Hemax1   = 280.1d3)
+parameter (Hemax2   = 280.1d3)
 parameter (Heratio  = Hemax1/Hemax2)
 
 parameter (cv       = 0.1d0)
-parameter (mi       = 0.3d0)
+parameter (mi       = 13.204d-6)
 parameter (kcond    = 1.d0)
 parameter (kappa    = 1.4d0 )
 parameter (dt       = 1.d-10 )
@@ -77,10 +78,10 @@ parameter (tfinal   = 5.d-9 )
 parameter (iteramax = dint(tfinal/dt)+1)
 
 !guesses for baseflow
-parameter (Lguess   = 0.78d0)
-parameter (Pguess   = -1.d0)
-parameter (Rguess   = 0.025d0)
-parameter (Qguess   = 7.d-2)
+parameter (fp_guess   = 0.78d0)
+parameter (g_guess   = -1.d0)
+parameter (fpp_guess   = 0.025d0)
+parameter (gp_guess   = 7.d-2)
 
 
 !constantes para MMS
